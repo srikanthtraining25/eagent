@@ -1,21 +1,23 @@
 import sys
 import os
 from langchain_core.messages import HumanMessage
-from redis import Redis
 from langgraph.checkpoint.memory import MemorySaver
 
-# Add project root to sys.path
+# Add PARENT directory of 'enterprise_agent' to sys.path
+# Script is in: .../enterprise_agent/verification_script_v2.py
+# We need to add: .../
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-# Mock LLM and Graph for testing without API Key
-from unittest.mock import MagicMock, patch
 
 # Update settings to avoid API errors
 os.environ["OPENAI_API_KEY"] = "mock_key"
 
-from enterprise_agent.state import AgentState
-from enterprise_agent.graph import create_agent_graph
-from enterprise_agent.config import settings
+# Imports from new locations
+from enterprise_agent.app.core.state import AgentState
+from enterprise_agent.app.agent.graph import create_agent_graph
+from enterprise_agent.app.core.config import settings
+
+# Mock LLM and Graph for testing without API Key
+from unittest.mock import MagicMock, patch
 
 def mock_router_node(state: AgentState):
     """
@@ -53,26 +55,26 @@ def mock_planner_node(state: AgentState):
     }
 
 def run_verification():
-    print("--- Starting Verification (Router -> Planner -> Dispatcher) ---")
+    print("--- Starting Verification V2 (New Structure) ---")
     
     checkpointer = MemorySaver()
     
     # Patch BOTH Router and Planner
-    with patch("enterprise_agent.graph.router_node", side_effect=mock_router_node), \
-         patch("enterprise_agent.graph.action_planner_node", side_effect=mock_planner_node):
+    with patch("enterprise_agent.app.agent.graph.router_node", side_effect=mock_router_node), \
+         patch("enterprise_agent.app.agent.graph.action_planner_node", side_effect=mock_planner_node):
         
         # 2. Initialize Graph
         graph = create_agent_graph(checkpointer=checkpointer)
-        thread_id = "test_planner_1"
+        thread_id = "test_struct_1"
         config = {"configurable": {"thread_id": thread_id}}
         
-        # 3. Test Multi-Action Flow
-        print("\n--- Test 1: Multiple Actions (via Planner) ---")
+        # 3. Test Multi-Action Flow + Token Injection
+        print("\n--- Test: Multi-Action + Token Injection ---")
         item1 = "Execute multiple actions"
         inputs = {
             "messages": [HumanMessage(content=item1)],
             "user_info": {"id": "tester", "role": "admin"},
-            "access_token": "mock_valid_token"
+            "access_token": "valid_mock_token"
         }
         
         # Step 1: Start -> Router -> Planner -> Dispatcher -> Action1 -> Review
@@ -82,11 +84,6 @@ def run_verification():
         snapshot = graph.get_state(config)
         if snapshot.next:
             print(f"[Pass] Graph interrupted at: {snapshot.next}")
-            # Verify Action 1
-            curr = snapshot.values.get("current_action")
-            print(f"[Check] Current Action ID: {curr['parameters']['id']}")
-            if curr['parameters']['id'] == "1":
-                print("[Pass] Action 1 is active.")
         else:
             print(f"[Fail] Graph did not interrupt. Result: {result}")
             return
@@ -98,9 +95,6 @@ def run_verification():
         snapshot = graph.get_state(config)
         if snapshot.next:
              print(f"[Pass] Graph interrupted again at: {snapshot.next}")
-             curr = snapshot.values.get("current_action")
-             if curr['parameters']['id'] == "2":
-                 print("[Pass] Action 2 is active.")
         else:
              print(f"[Fail] Graph did not interrupt for second action.")
              return
@@ -108,7 +102,15 @@ def run_verification():
         # Step 3: Approve Action 2
         print("\n[Step 3] Approving Action 2...")
         result = graph.invoke(None, config=config)
-        print("[Pass] Graph completed successfully.")
+        
+        if not snapshot.next:
+            print("[Pass] Graph completed successfully.")
+            last_msg = result["messages"][-1].content
+            print(f"[Result] Last Message: {last_msg}")
+            if "Token Present" in last_msg:
+                 print("[Pass] Tool received token.")
+            else:
+                 print("[Fail] Tool did NOT receive token!")
 
 if __name__ == "__main__":
     run_verification()

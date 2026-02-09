@@ -23,3 +23,6 @@ class AgentState(TypedDict):
     
     # Currently processing action
     current_action: Optional[Dict[str, Any]]
+    
+    # Access Token for API calls
+    access_token: Optional[str]

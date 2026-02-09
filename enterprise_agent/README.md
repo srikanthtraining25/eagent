@@ -29,7 +29,22 @@ Before starting, ensure you have the following installed:
     pip install -r requirements.txt
     ```
 
-## 3. Configuration
+## 3. Project Structure
+
+```bash
+enterprise_agent/
+├── app/
+│   ├── api/            # FastAPI server and endpoints
+│   ├── core/           # Configuration and State definitions
+│   ├── agent/          # Graph logic and Tools
+│   └── services/       # Middleware, Checkpointer, Redis
+├── venv/               # Virtual environment
+├── requirements.txt
+├── README.md
+└── verification_script_v2.py
+```
+
+## 4. Configuration
 
 The application uses `config.py` which loads environment variables. You can create a `.env` file in the `enterprise_agent` root:
 
@@ -57,13 +72,13 @@ To use a local model (e.g., Llama 3 via Ollama) for the Knowledge Base:
 
 **Note**: For `ACTION_LLM_MODEL`, ensure the local model supports **Structured Outputs** (Function Calling) effectively. Otherwise, sticking to GPT-4o/Turbo is recommended for the Router.
 
-## 4. Running the Application
+## 5. Running the Application
 
 ### Start the FastAPI Server
 Run the following command to start the agent API:
 
 ```powershell
-uvicorn enterprise_agent.server:app --reload
+uvicorn enterprise_agent.app.api.server:app --reload
 ```
 
 -   **API Root**: `http://localhost:8000`
@@ -73,10 +88,10 @@ uvicorn enterprise_agent.server:app --reload
 To verify the installation and agent logic (using Mocks):
 
 ```powershell
-python verification_script.py
+python verification_script_v2.py
 ```
 
-## 5. Usage
+## 6. Usage
 
 ### Chat Endpoint
 **POST** `/chat`
@@ -85,7 +100,8 @@ python verification_script.py
 ```json
 {
   "message": "Update my email",
-  "user_id": "user_123"
+  "user_id": "user_123",
+  "access_token": "optional_bearer_token"
 }
 ```
 

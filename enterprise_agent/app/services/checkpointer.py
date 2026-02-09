@@ -1,6 +1,6 @@
 from langgraph.checkpoint.redis import RedisSaver
 from redis import Redis
-from .config import settings
+from enterprise_agent.app.core.config import settings
 
 def get_checkpointer():
     """

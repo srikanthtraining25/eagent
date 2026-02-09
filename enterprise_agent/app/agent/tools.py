@@ -18,11 +18,16 @@ def search_kb(query: str) -> str:
 
 # Mock Action Tool
 @tool
-def perform_action(id: str, data: str) -> str:
+def perform_action(id: str, data: str, access_token: str = None) -> str:
     """
-    Executes a sensitive operation or update on behalf of the user.
-    Use this for actions like 'update email', 'reset password', 'submit request', etc.
-    The 'id' should be a unique identifier (use '12345' for tests) and 'data' contains details.
+    Executes a sensitive operation or update.
+    The 'id' should be a unique identifier and 'data' contains details.
     """
-    print(f"[Action] Executing with data: id={id}, data={data}")
-    return f"Action executed successfully. INTERNAL_ID_999. Submission ID: {id}"
+    token_status = "Token Present" if access_token else "No Token"
+    print(f"[Action] Executing with data: id={id}, data={data}, token={token_status}")
+    
+    # In real app, use access_token in API header
+    # headers = {"Authorization": f"Bearer {access_token}"}
+    # requests.post(..., headers=headers)
+    
+    return f"Action executed successfully. INTERNAL_ID_999. Submission ID: {id}. Auth: {token_status}"

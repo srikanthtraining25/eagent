@@ -1,6 +1,6 @@
 import re
-from typing import Dict, Any
-
+from typing import Dict, Any, List
+from enterprise_agent.app.core.config import settings
 def rai_check(text: str) -> Dict[str, Any]:
     """
     Checks for policy violations (Mock implementation).
@@ -51,4 +51,20 @@ def post_process_response(response: str, context: Dict[str, Any]) -> Dict[str, A
     return {
         "filtered_response": filtered_response,
         "context_updates": updates
+    }
+
+def validate_token(token: str) -> Dict[str, Any]:
+    """
+    Validates and decodes the access token.
+    Mock implementation: returns dummy user info if token is present.
+    """
+    if not token:
+        return None
+    
+    # In real impl, decode JWT here.
+    # Mocking decode based on token prefix or just returning default.
+    return {
+        "id": "user_from_token",
+        "role": "admin" if "admin" in token else "user",
+        "department": "IT"
     }

@@ -5,11 +5,16 @@ from langgraph.graph import StateGraph, START, END
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langchain_openai import ChatOpenAI
 
-from .state import AgentState
-from .middleware import rai_check, pii_filter, check_permission, post_process_response
-from .tools import search_kb, perform_action
-from .checkpointer import get_checkpointer
-from .config import settings
+from enterprise_agent.app.core.state import AgentState
+from enterprise_agent.app.services.middleware import (
+    rai_check, 
+    pii_filter, 
+    check_permission, 
+    post_process_response
+)
+from enterprise_agent.app.agent.tools import search_kb, perform_action
+from enterprise_agent.app.services.checkpointer import get_checkpointer
+from enterprise_agent.app.core.config import settings
 
 # --- Pydantic Models for Router ---
 
@@ -60,7 +65,9 @@ def action_planner_node(state: AgentState):
     )
     
     # Bind tools so LLM knows what's available
-    tools = [perform_action, search_kb] # Give it all tools, or just action tools
+    # Note: 'access_token' is in the tool signature but we don't expect LLM to generate it.
+    # In a production app, we would explicitly exclude it from the OpenAI schema.
+    tools = [perform_action, search_kb] 
     llm_with_tools = llm.bind_tools(tools)
     
     system_prompt = """You are an action planner. 
@@ -180,6 +187,11 @@ def execute_action_node(state: AgentState):
     
     # Execute
     if action.get("tool_name") == "perform_action":
+        # Inject Access Token from State
+        token = state.get("access_token")
+        if token:
+            params["access_token"] = token
+            
         result = perform_action.invoke(params)
     else:
         result = f"Unknown tool: {action.get('tool_name')}"
