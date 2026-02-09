@@ -58,6 +58,8 @@ REDIS_URL=redis://localhost:6379
 -   `KB_LLM_MODEL`: Model used for Knowledge Base queries (Default: `gpt-3.5-turbo`).
 -   `ACTION_LLM_MODEL`: Model used for Routing and Structured Output (Default: `gpt-4-turbo`).
 -   `PII_REDACTION_ENABLED`: Toggle PII filtering (Default: `True`).
+-   `JWT_SECRET_KEY`: Secret key for signing/verifying JWTs.
+-   `JWT_ALGORITHM`: Algorithm used for JWTs (Default: `HS256`).
 
 ### Local LLM Configuration (Example: Ollama)
 To use a local model (e.g., Llama 3 via Ollama) for the Knowledge Base:

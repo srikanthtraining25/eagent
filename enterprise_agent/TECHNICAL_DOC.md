@@ -36,7 +36,7 @@ The Enterprise Agent is built on **LangGraph**, a stateful orchestration library
     -   **RAI Check**: Scans input for policy violations (Mock: blocks "unsafe").
     -   **PII Filter**: Redacts regex-matched sensitive info (Emails, Phones) *before* processing action data.
     -   **Permissions**: Validates `user_info.role` against the requested action.
-    -   **Token Validation**: Decodes `access_token` to retrieve user identity.
+    -   **Token Validation**: Uses `PyJWT` to decode the `access_token`, verifying signature and expiration. Returns 401 if invalid.
 
 6.  **Human-in-the-Loop (HITL)**
     -   **Mechanism**: Uses LangGraph's `interrupt_before=["execute_action_node"]`.

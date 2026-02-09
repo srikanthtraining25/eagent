@@ -53,18 +53,28 @@ def post_process_response(response: str, context: Dict[str, Any]) -> Dict[str, A
         "context_updates": updates
     }
 
+import jwt
+
 def validate_token(token: str) -> Dict[str, Any]:
     """
     Validates and decodes the access token.
-    Mock implementation: returns dummy user info if token is present.
+    Uses JWT_SECRET_KEY and JWT_ALGORITHM from settings.
+    Returns the decoded payload (user info) if valid, else None.
     """
     if not token:
         return None
     
-    # In real impl, decode JWT here.
-    # Mocking decode based on token prefix or just returning default.
-    return {
-        "id": "user_from_token",
-        "role": "admin" if "admin" in token else "user",
-        "department": "IT"
-    }
+    try:
+        # Decode the token
+        payload = jwt.decode(
+            token, 
+            settings.JWT_SECRET_KEY, 
+            algorithms=[settings.JWT_ALGORITHM]
+        )
+        return payload
+    except jwt.ExpiredSignatureError:
+        print("Token expired")
+        return None
+    except jwt.InvalidTokenError:
+        print("Invalid token")
+        return None

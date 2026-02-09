@@ -26,6 +26,10 @@ class Settings(BaseSettings):
     ACTION_LLM_BASE_URL: Optional[str] = os.getenv("ACTION_LLM_BASE_URL", None)
     ACTION_LLM_API_KEY: Optional[str] = os.getenv("ACTION_LLM_API_KEY", None)
 
+    # JWT Settings
+    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "dev_secret_key_change_me")
+    JWT_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
+
     
     # Middleware Settings
     PII_REDACTION_ENABLED: bool = True

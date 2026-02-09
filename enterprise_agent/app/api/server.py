@@ -13,7 +13,8 @@ from enterprise_agent.app.services.middleware import validate_token
 class ChatRequest(BaseModel):
     message: str
     thread_id: Optional[str] = None
-    user_id: str = "user123"
+    access_token: Optional[str] = None # For JWT
+    user_id: Optional[str] = None # Fallback or debug
 
 # ... (ApproveRequest remains same) ...
 
@@ -24,18 +25,26 @@ async def chat_endpoint(request: ChatRequest):
     
     config = {"configurable": {"thread_id": thread_id}}
     
-    # ... (rest of the function uses local variable `thread_id` instead of `request.thread_id`) ...
+    # 1. Validate Access Token
+    user_info = {"id": "anonymous", "role": "guest"}
+    token = request.access_token
     
-    # Initialize state with user info if new
-    # For simplicity, we just pass the message. The state schema handles default.
-    # In a real app, we might check if state exists and inject user_info if not.
+    if token:
+        decoded_user = validate_token(token)
+        if not decoded_user:
+            raise HTTPException(status_code=401, detail="Invalid or expired access token")
+        user_info = decoded_user
     
+    # Initialize Input State
     initial_inputs = {
         "messages": [HumanMessage(content=request.message)],
-        "user_info": {"id": request.user_id, "role": "admin"}, # Mock user info
+        "user_info": user_info,
+        "access_token": token, # Store raw token for downstream tools
         "dialog_context": {},
         "middleware_results": {},
-        "next_step": None
+        "next_step": None,
+        "action_queue": [], # Initialize queue
+        "current_action": None
     }
     
     try:
