@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-03-06" type="device">
+  <diagram name="Enterprise Agent Architecture" id="arch-main">
+    <mxGraphModel dx="1800" dy="1400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1300" math="0" shadow="1" background="#0f0f23">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- ============================================================ -->
+        <!-- TITLE -->
+        <!-- ============================================================ -->
+        <mxCell id="title" value="Enterprise Agent — Temporal + LangGraph + FastA2A" style="text;html=1;fontSize=24;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#e0e0e0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="450" y="20" width="700" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="Unified Single-Service Architecture" style="text;html=1;fontSize=14;fillColor=none;strokeColor=none;fontColor=#78909c;align=center;" vertex="1" parent="1">
+          <mxGeometry x="550" y="55" width="500" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- ROW 1: USER  &  EXTERNAL AGENTS (side by side, top) -->
+        <!-- ============================================================ -->
+        <mxCell id="user" value="👤 User" style="shape=ellipse;whiteSpace=wrap;html=1;fillColor=#1565c0;strokeColor=#42a5f5;fontColor=#ffffff;fontSize=14;fontStyle=1;shadow=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="350" y="95" width="130" height="55" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ext-section" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#546e7a;strokeWidth=2;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="90" width="480" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="ext-label" value="🌍 External A2A Agents" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#90a4ae;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="92" width="200" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="ext-agent1" value="External Agent A&#xa;(Partner System)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#37474f;strokeColor=#78909c;fontColor=#ffffff;fontSize=11;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="112" width="200" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="ext-agent2" value="External Agent B&#xa;(3rd Party AI)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#37474f;strokeColor=#78909c;fontColor=#ffffff;fontSize=11;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1360" y="112" width="200" height="44" as="geometry"/>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- MAIN AGENT BOUNDARY BOX -->
+        <!-- ============================================================ -->
+        <mxCell id="agent-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#5c6bc0;strokeWidth=3;arcSize=6;" vertex="1" parent="1">
+          <mxGeometry x="100" y="190" width="1500" height="800" as="geometry"/>
+        </mxCell>
+        <mxCell id="agent-title" value="🤖 Enterprise Agent — Single Service (Port 8000)" style="text;html=1;fontSize=17;fontStyle=1;fillColor=#283593;strokeColor=#1a237e;fontColor=#ffffff;align=center;rounded=1;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="480" y="198" width="440" height="32" as="geometry"/>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- LAYER 1: API + FastA2A (horizontal row) -->
+        <!-- ============================================================ -->
+        <mxCell id="api-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a237e;strokeColor=#3949ab;strokeWidth=2;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="140" y="250" width="1420" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="api-section-label" value="🌐 API &amp; Protocol Layer" style="text;html=1;fontSize=12;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#7986cb;align=left;" vertex="1" parent="1">
+          <mxGeometry x="155" y="255" width="200" height="18" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="fastapi" value="&lt;b&gt;FastAPI Gateway&lt;/b&gt;&#xa;POST /chat&#xa;POST /approve/{workflow_id}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1565c0;strokeColor=#0d47a1;fontColor=#ffffff;fontSize=12;shadow=1;spacingTop=2;" vertex="1" parent="1">
+          <mxGeometry x="180" y="280" width="280" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="fasta2a-srv" value="&lt;b&gt;FastA2A Server&lt;/b&gt;&#xa;POST /a2a (JSON-RPC 2.0)&#xa;GET /.well-known/agent.json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c62828;strokeColor=#e53935;fontColor=#ffffff;fontSize=12;shadow=1;spacingTop=2;" vertex="1" parent="1">
+          <mxGeometry x="520" y="280" width="300" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="agent-card-badge" value="📇 Single Agent Card" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#880e4f;strokeColor=#ad1457;fontColor=#ffffff;fontSize=10;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="870" y="290" width="150" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- LAYER 2: TEMPORAL ORCHESTRATION -->
+        <!-- ============================================================ -->
+        <mxCell id="temporal-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0d47a1;strokeColor=#1565c0;strokeWidth=2;opacity=25;" vertex="1" parent="1">
+          <mxGeometry x="140" y="380" width="1420" height="220" as="geometry"/>
+        </mxCell>
+        <mxCell id="temporal-section-label" value="⚡ Temporal Orchestration (Internal)" style="text;html=1;fontSize=12;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#42a5f5;align=left;" vertex="1" parent="1">
+          <mxGeometry x="155" y="385" width="280" height="18" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 1: Client → Orchestrator → Classifier -->
+        <mxCell id="tc" value="&lt;b&gt;Temporal&lt;br&gt;Client&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0d47a1;strokeColor=#1976d2;fontColor=#ffffff;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="420" width="120" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="orch" value="&lt;b&gt;Orchestrator&lt;br&gt;Workflow&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#0d47a1;strokeColor=#42a5f5;fontColor=#ffffff;fontSize=12;fontStyle=0;shadow=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="380" y="415" width="150" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="classifier" value="&lt;b&gt;Classification Activity&lt;/b&gt;&#xa;KB / ACTION / DELEGATE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1565c0;strokeColor=#42a5f5;fontColor=#ffffff;fontSize=11;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="420" width="200" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 2: Sub-Workflows -->
+        <mxCell id="kb-wf" value="&lt;b&gt;KB&lt;br&gt;Sub-Workflow&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0d47a1;strokeColor=#42a5f5;fontColor=#ffffff;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="530" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="action-wf" value="&lt;b&gt;Action&lt;br&gt;Sub-Workflow&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0d47a1;strokeColor=#42a5f5;fontColor=#ffffff;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="570" y="530" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="delegate-wf" value="&lt;b&gt;Delegate&lt;br&gt;Sub-Workflow&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0d47a1;strokeColor=#42a5f5;fontColor=#ffffff;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="790" y="530" width="150" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="hitl" value="&lt;b&gt;Human&lt;br&gt;Approval&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#e65100;strokeColor=#ff8f00;fontColor=#ffffff;fontSize=11;shadow=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="510" width="120" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- LAYER 3: LANGGRAPH (left) + A2A CLIENT (right) -->
+        <!-- ============================================================ -->
+        <!-- LangGraph section -->
+        <mxCell id="lg-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1b5e20;strokeColor=#2e7d32;strokeWidth=2;opacity=25;" vertex="1" parent="1">
+          <mxGeometry x="140" y="630" width="620" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="lg-section-label" value="🧠 LangGraph Agents (In-Process — NOT exposed via HTTP)" style="text;html=1;fontSize=12;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#66bb6a;align=left;" vertex="1" parent="1">
+          <mxGeometry x="155" y="635" width="420" height="18" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="kb-act" value="&lt;b&gt;KB Activity&lt;/b&gt;&#xa;→ LangGraph KB Graph&#xa;→ RAG Retrieval" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2e7d32;strokeColor=#43a047;fontColor=#ffffff;fontSize=11;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="665" width="250" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-act" value="&lt;b&gt;Action Activity&lt;/b&gt;&#xa;→ LangGraph Action Graph&#xa;→ Tool Execution" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2e7d32;strokeColor=#43a047;fontColor=#ffffff;fontSize=11;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="665" width="250" height="65" as="geometry"/>
+        </mxCell>
+
+        <!-- A2A Client section -->
+        <mxCell id="a2a-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b71c1c;strokeColor=#c62828;strokeWidth=2;opacity=18;" vertex="1" parent="1">
+          <mxGeometry x="800" y="630" width="760" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2a-section-label" value="🔗 A2A Client (Outbound — delegation to external agents only)" style="text;html=1;fontSize=12;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#ef5350;align=left;" vertex="1" parent="1">
+          <mxGeometry x="815" y="635" width="420" height="18" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="a2a-client" value="&lt;b&gt;A2A Client&lt;/b&gt;&#xa;httpx + JSON-RPC 2.0&#xa;tasks/send • tasks/get" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c62828;strokeColor=#e53935;fontColor=#ffffff;fontSize=11;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="840" y="665" width="220" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2a-reg" value="&lt;b&gt;Agent Registry&lt;/b&gt;&#xa;External Agent Cards&#xa;Discovery &amp; Cache" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c62828;strokeColor=#e53935;fontColor=#ffffff;fontSize=11;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="665" width="220" height="65" as="geometry"/>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- LAYER 4: PERSISTENCE + OBSERVABILITY (bottom row) -->
+        <!-- ============================================================ -->
+        <mxCell id="infra-label" value="💾 Infrastructure" style="text;html=1;fontSize=14;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#b0bec5;align=left;" vertex="1" parent="1">
+          <mxGeometry x="140" y="815" width="200" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="postgres" value="&lt;b&gt;PostgreSQL&lt;/b&gt;&#xa;Temporal Workflow State&#xa;Activity History" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#e65100;strokeColor=#ff8f00;fontColor=#ffffff;fontSize=11;shadow=1;size=12;" vertex="1" parent="1">
+          <mxGeometry x="180" y="850" width="220" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="redis" value="&lt;b&gt;Redis&lt;/b&gt;&#xa;LangGraph Checkpoints&#xa;Chat History • FastA2A Tasks" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#e65100;strokeColor=#ff8f00;fontColor=#ffffff;fontSize=11;shadow=1;size=12;" vertex="1" parent="1">
+          <mxGeometry x="470" y="850" width="260" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="arize" value="&lt;b&gt;Arize Phoenix&lt;/b&gt;&#xa;OTEL Tracing&#xa;LLM Evaluations" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6a1b9a;strokeColor=#9c27b0;fontColor=#ffffff;fontSize=11;fontStyle=0;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="800" y="860" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- DOCKER SERVICES BAR -->
+        <!-- ============================================================ -->
+        <mxCell id="docker" value="🐳 Docker Compose Services:  app (:8000)  |  temporal  |  postgres  |  redis    — 4 services total" style="text;html=1;fontSize=14;fontStyle=1;fillColor=#263238;strokeColor=#455a64;fontColor=#b0bec5;align=center;rounded=1;spacingLeft=14;spacingRight=14;spacingTop=4;spacingBottom=4;" vertex="1" parent="1">
+          <mxGeometry x="350" y="970" width="700" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- ARROWS: User & External → API Layer -->
+        <!-- ============================================================ -->
+        <!-- User → FastAPI -->
+        <mxCell id="a-user-api" style="rounded=1;strokeColor=#64b5f6;strokeWidth=2;fontColor=#64b5f6;fontSize=10;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="user" target="fastapi" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-user-api-l" value="POST /chat" style="edgeLabel;html=1;fontSize=10;fontColor=#64b5f6;" vertex="1" connectable="0" parent="a-user-api">
+          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- External Agent A → FastA2A (INBOUND A2A) -->
+        <mxCell id="a-ext1-a2a" style="rounded=1;strokeColor=#ef5350;strokeWidth=3;fontColor=#ef5350;fontSize=11;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=1;exitDx=0;exitDy=0;dashed=0;" edge="1" source="ext-agent1" target="fasta2a-srv" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1050" y="156"/>
+              <mxPoint x="1050" y="310"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a-ext1-a2a-l" value="⬅ INBOUND A2A&#xa;tasks/send (JSON-RPC)" style="edgeLabel;html=1;fontSize=11;fontColor=#ef5350;fontStyle=1;align=left;" vertex="1" connectable="0" parent="a-ext1-a2a">
+          <mxGeometry x="0.1" relative="1" as="geometry"><mxPoint x="10" as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- External Agent B → FastA2A (INBOUND A2A) -->
+        <mxCell id="a-ext2-a2a" style="rounded=1;strokeColor=#ef5350;strokeWidth=2;fontColor=#ef5350;fontSize=10;entryX=1;entryY=0.3;entryDx=0;entryDy=0;exitX=0.3;exitY=1;exitDx=0;exitDy=0;dashed=1;" edge="1" source="ext-agent2" target="fasta2a-srv" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1080" y="180"/>
+              <mxPoint x="1080" y="298"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a-ext2-a2a-l" value="inbound" style="edgeLabel;html=1;fontSize=9;fontColor=#ef5350;" vertex="1" connectable="0" parent="a-ext2-a2a">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- ARROWS: API → Temporal -->
+        <!-- ============================================================ -->
+        <!-- FastAPI → Temporal Client -->
+        <mxCell id="a-api-tc" style="rounded=1;strokeColor=#64b5f6;strokeWidth=2;fontColor=#64b5f6;fontSize=10;" edge="1" source="fastapi" target="tc" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-api-tc-l" value="Start Workflow" style="edgeLabel;html=1;fontSize=10;fontColor=#64b5f6;" vertex="1" connectable="0" parent="a-api-tc">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- FastA2A → Temporal Client -->
+        <mxCell id="a-a2a-tc" style="rounded=1;strokeColor=#ef5350;strokeWidth=2;fontColor=#ef5350;fontSize=10;exitX=0;exitY=1;exitDx=0;exitDy=0;" edge="1" source="fasta2a-srv" target="tc" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="350" y="370"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a-a2a-tc-l" value="Worker.run_task()" style="edgeLabel;html=1;fontSize=10;fontColor=#ef5350;" vertex="1" connectable="0" parent="a-a2a-tc">
+          <mxGeometry x="0.2" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- ARROWS: Temporal Internal -->
+        <!-- ============================================================ -->
+        <!-- TC → Orchestrator -->
+        <mxCell id="a-tc-orch" style="rounded=1;strokeColor=#42a5f5;strokeWidth=2;" edge="1" source="tc" target="orch" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Orchestrator → Classifier -->
+        <mxCell id="a-orch-cls" style="rounded=1;strokeColor=#42a5f5;strokeWidth=2;fontColor=#42a5f5;fontSize=10;" edge="1" source="orch" target="classifier" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-orch-cls-l" value="Classify" style="edgeLabel;html=1;fontSize=10;fontColor=#42a5f5;" vertex="1" connectable="0" parent="a-orch-cls">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- Classifier → KB WF -->
+        <mxCell id="a-cls-kb" style="rounded=1;strokeColor=#66bb6a;strokeWidth=2;fontColor=#66bb6a;fontSize=11;exitX=0.2;exitY=1;exitDx=0;exitDy=0;" edge="1" source="classifier" target="kb-wf" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-cls-kb-l" value="KB" style="edgeLabel;html=1;fontSize=11;fontColor=#66bb6a;fontStyle=1;" vertex="1" connectable="0" parent="a-cls-kb">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- Classifier → Action WF -->
+        <mxCell id="a-cls-act" style="rounded=1;strokeColor=#ffa726;strokeWidth=2;fontColor=#ffa726;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" source="classifier" target="action-wf" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-cls-act-l" value="ACTION" style="edgeLabel;html=1;fontSize=11;fontColor=#ffa726;fontStyle=1;" vertex="1" connectable="0" parent="a-cls-act">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- Classifier → Delegate WF -->
+        <mxCell id="a-cls-del" style="rounded=1;strokeColor=#ef5350;strokeWidth=2;fontColor=#ef5350;fontSize=11;exitX=0.8;exitY=1;exitDx=0;exitDy=0;" edge="1" source="classifier" target="delegate-wf" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-cls-del-l" value="DELEGATE" style="edgeLabel;html=1;fontSize=11;fontColor=#ef5350;fontStyle=1;" vertex="1" connectable="0" parent="a-cls-del">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- Action WF → HITL -->
+        <mxCell id="a-act-hitl" style="rounded=1;strokeColor=#ffa726;strokeWidth=2;dashed=1;fontColor=#ffa726;fontSize=10;" edge="1" source="action-wf" target="hitl" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-act-hitl-l" value="Wait Signal" style="edgeLabel;html=1;fontSize=10;fontColor=#ffa726;" vertex="1" connectable="0" parent="a-act-hitl">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- FastAPI /approve → HITL -->
+        <mxCell id="a-approve-hitl" style="rounded=1;strokeColor=#ffa726;strokeWidth=2;dashed=1;fontColor=#ffa726;fontSize=10;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" edge="1" source="fastapi" target="hitl" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="460" y="500"/>
+              <mxPoint x="1030" y="500"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a-approve-l" value="POST /approve" style="edgeLabel;html=1;fontSize=10;fontColor=#ffa726;" vertex="1" connectable="0" parent="a-approve-hitl">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- ARROWS: Sub-Workflows → Activities -->
+        <!-- ============================================================ -->
+        <!-- KB WF → KB Activity -->
+        <mxCell id="a-kbwf-kbact" style="rounded=1;strokeColor=#66bb6a;strokeWidth=2;fontColor=#66bb6a;fontSize=10;" edge="1" source="kb-wf" target="kb-act" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-kbwf-kbact-l" value="In-Process" style="edgeLabel;html=1;fontSize=9;fontColor=#66bb6a;" vertex="1" connectable="0" parent="a-kbwf-kbact">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- Action WF → Action Activity -->
+        <mxCell id="a-awf-aact" style="rounded=1;strokeColor=#66bb6a;strokeWidth=2;fontColor=#66bb6a;fontSize=10;" edge="1" source="action-wf" target="act-act" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-awf-aact-l" value="In-Process" style="edgeLabel;html=1;fontSize=9;fontColor=#66bb6a;" vertex="1" connectable="0" parent="a-awf-aact">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- Delegate WF → A2A Client -->
+        <mxCell id="a-dwf-a2acli" style="rounded=1;strokeColor=#ef5350;strokeWidth=2;fontColor=#ef5350;fontSize=10;" edge="1" source="delegate-wf" target="a2a-client" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-dwf-a2acli-l" value="Outbound" style="edgeLabel;html=1;fontSize=10;fontColor=#ef5350;" vertex="1" connectable="0" parent="a-dwf-a2acli">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- A2A Client ↔ Registry -->
+        <mxCell id="a-cli-reg" style="rounded=1;strokeColor=#ef5350;strokeWidth=2;dashed=1;" edge="1" source="a2a-client" target="a2a-reg" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- ARROWS: A2A Client → External Agents (OUTBOUND) -->
+        <!-- ============================================================ -->
+        <mxCell id="a-cli-ext1" style="rounded=1;strokeColor=#ef5350;strokeWidth=2;fontColor=#ef5350;fontSize=10;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" source="a2a-client" target="ext-agent1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="950" y="200"/>
+              <mxPoint x="1220" y="200"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a-cli-ext1-l" value="OUTBOUND ➡&#xa;tasks/send" style="edgeLabel;html=1;fontSize=10;fontColor=#ef5350;fontStyle=1;" vertex="1" connectable="0" parent="a-cli-ext1">
+          <mxGeometry x="-0.3" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <mxCell id="a-cli-ext2" style="rounded=1;strokeColor=#ef5350;strokeWidth=2;fontColor=#ef5350;fontSize=10;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" source="a2a-client" target="ext-agent2" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1460" y="200"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a-cli-ext2-l" value="tasks/send" style="edgeLabel;html=1;fontSize=10;fontColor=#ef5350;" vertex="1" connectable="0" parent="a-cli-ext2">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- ARROWS: Persistence -->
+        <!-- ============================================================ -->
+        <mxCell id="a-tc-pg" style="rounded=1;strokeColor=#ffa726;strokeWidth=1;dashed=1;" edge="1" source="tc" target="postgres" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-kb-redis" style="rounded=1;strokeColor=#ffa726;strokeWidth=1;dashed=1;" edge="1" source="kb-act" target="redis" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-act-redis" style="rounded=1;strokeColor=#ffa726;strokeWidth=1;dashed=1;" edge="1" source="act-act" target="redis" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-a2asrv-redis" style="rounded=1;strokeColor=#ffa726;strokeWidth=1;dashed=1;" edge="1" source="fasta2a-srv" target="redis" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="760" y="890"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Observability -->
+        <mxCell id="a-kb-arize" style="rounded=1;strokeColor=#ab47bc;strokeWidth=1;dashed=1;" edge="1" source="kb-act" target="arize" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-act-arize" style="rounded=1;strokeColor=#ab47bc;strokeWidth=1;dashed=1;" edge="1" source="act-act" target="arize" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- LEGEND -->
+        <!-- ============================================================ -->
+        <mxCell id="legend-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#455a64;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="830" width="350" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-title" value="Legend" style="text;html=1;fontSize=12;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#b0bec5;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1215" y="835" width="80" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg1" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1565c0;strokeColor=#0d47a1;shadow=0;" vertex="1" parent="1">
+          <mxGeometry x="1215" y="860" width="20" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg1t" value="API / FastAPI" style="text;html=1;fontSize=10;fillColor=none;strokeColor=none;fontColor=#b0bec5;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1245" y="857" width="100" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0d47a1;strokeColor=#42a5f5;shadow=0;" vertex="1" parent="1">
+          <mxGeometry x="1215" y="882" width="20" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg2t" value="Temporal Orchestration" style="text;html=1;fontSize=10;fillColor=none;strokeColor=none;fontColor=#b0bec5;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1245" y="879" width="140" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg3" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2e7d32;strokeColor=#43a047;shadow=0;" vertex="1" parent="1">
+          <mxGeometry x="1215" y="904" width="20" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg3t" value="LangGraph (In-Process)" style="text;html=1;fontSize=10;fillColor=none;strokeColor=none;fontColor=#b0bec5;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1245" y="901" width="140" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg4" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c62828;strokeColor=#e53935;shadow=0;" vertex="1" parent="1">
+          <mxGeometry x="1215" y="926" width="20" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg4t" value="A2A (FastA2A / Client)" style="text;html=1;fontSize=10;fillColor=none;strokeColor=none;fontColor=#b0bec5;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1245" y="923" width="140" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg5" value="" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#e65100;strokeColor=#ff8f00;shadow=0;size=6;" vertex="1" parent="1">
+          <mxGeometry x="1385" y="857" width="20" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg5t" value="Persistence" style="text;html=1;fontSize=10;fillColor=none;strokeColor=none;fontColor=#b0bec5;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1415" y="857" width="100" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg6" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6a1b9a;strokeColor=#9c27b0;shadow=0;" vertex="1" parent="1">
+          <mxGeometry x="1385" y="882" width="20" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg6t" value="Observability" style="text;html=1;fontSize=10;fillColor=none;strokeColor=none;fontColor=#b0bec5;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1415" y="879" width="100" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg7" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#37474f;strokeColor=#78909c;shadow=0;" vertex="1" parent="1">
+          <mxGeometry x="1385" y="904" width="20" height="14" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg7t" value="External Agents" style="text;html=1;fontSize=10;fillColor=none;strokeColor=none;fontColor=#b0bec5;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1415" y="901" width="100" height="18" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,79 @@
+graph TD
+    %% Styles
+    classDef gateway fill:#1a237e,stroke:#5c6bc0,stroke-width:2px,color:#fff;
+    classDef temporal fill:#0d47a1,stroke:#42a5f5,stroke-width:2px,color:#fff;
+    classDef a2a fill:#b71c1c,stroke:#ef5350,stroke-width:2px,color:#fff;
+    classDef agent fill:#1b5e20,stroke:#66bb6a,stroke-width:2px,color:#fff;
+    classDef storage fill:#e65100,stroke:#ffa726,stroke-width:2px,color:#fff;
+    classDef observability fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
+    classDef external fill:#37474f,stroke:#78909c,stroke-width:2px,color:#fff;
+
+    User((User)) -->|Chat / A2A Request| APP
+
+    subgraph Unified_Agent["🤖 Enterprise Agent — Single Service (Port 8000)"]
+        direction TB
+
+        subgraph API_A2A["FastAPI + FastA2A"]
+            APP["FastAPI Gateway<br/>POST /chat<br/>POST /approve"]
+            A2A_SRV["FastA2A Server<br/>POST /a2a (JSON-RPC)<br/>GET /.well-known/agent.json"]
+        end
+
+        subgraph Temporal_Layer["⚡ Temporal Orchestration"]
+            TC[Temporal Client] --> OW{Orchestrator<br/>Workflow}
+            OW --> CLA["Classification Activity<br/>KB / ACTION / DELEGATE"]
+            CLA -->|KB| KBW[KB Sub-Workflow]
+            CLA -->|Action| AW[Action Sub-Workflow]
+            CLA -->|Delegate| DW[Delegate Sub-Workflow]
+            AW -.->|Wait Signal| HITL{Human<br/>Approval}
+        end
+
+        subgraph LG_Agents["🧠 LangGraph Agents (In-Process Activities)"]
+            KB_ACT["KB Activity<br/>→ KB Graph → RAG"]
+            ACT_ACT["Action Activity<br/>→ Action Graph → Tools"]
+        end
+
+        KBW --> KB_ACT
+        AW --> ACT_ACT
+
+        subgraph A2A_Out["🔗 A2A Client (Outbound)"]
+            A2A_CLI["A2A Client<br/>(httpx)"]
+            A2A_REG["Agent Registry"]
+            A2A_CLI <--> A2A_REG
+        end
+
+        DW --> A2A_CLI
+        APP --> TC
+        A2A_SRV --> TC
+        APP -.->|POST /approve| HITL
+    end
+
+    subgraph Ext_Agents["🌍 External A2A Agents"]
+        EXT1["External Agent A"]
+        EXT2["External Agent B"]
+    end
+
+    A2A_CLI -->|"tasks/send"| EXT1
+    A2A_CLI -->|"tasks/send"| EXT2
+    EXT1 -->|"tasks/send"| A2A_SRV
+
+    subgraph Persistence["💾 Persistence"]
+        PG[("PostgreSQL<br/>Temporal State")]
+        Redis[("Redis<br/>Checkpoints + Chat History<br/>FastA2A Task Storage")]
+    end
+
+    subgraph Obs["📊 Observability"]
+        Arize["Arize Phoenix<br/>OTEL Tracing"]
+    end
+
+    Temporal_Layer -.-> PG
+    LG_Agents -.-> Redis
+    LG_Agents -.-> Arize
+    A2A_SRV -.-> Redis
+
+    class APP,A2A_SRV gateway;
+    class TC,OW,CLA,KBW,AW,DW,HITL temporal;
+    class KB_ACT,ACT_ACT agent;
+    class A2A_CLI,A2A_REG a2a;
+    class EXT1,EXT2 external;
+    class PG,Redis storage;
+    class Arize observability;

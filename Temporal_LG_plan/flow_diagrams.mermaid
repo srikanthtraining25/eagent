@@ -1,0 +1,174 @@
+%% ============================================================
+%% FLOW 1: KB Query (User Chat)
+%% ============================================================
+sequenceDiagram
+    autonumber
+    participant U as 👤 User
+    participant API as FastAPI :8000
+    participant A2A as FastA2A Server
+    participant TC as Temporal Client
+    participant OW as Orchestrator WF
+    participant CLA as Classification
+    participant KBW as KB Sub-WF
+    participant KB as KB Activity<br/>(LangGraph)
+    participant R as Redis
+    participant PG as PostgreSQL
+
+    rect rgb(26, 35, 126)
+    Note over U,PG: Flow 1 — KB Query via POST /chat
+    end
+
+    U->>API: POST /chat {message, session_id}
+    API->>TC: Start OrchestrationWorkflow
+    TC->>PG: Persist workflow state
+    TC->>OW: Execute workflow
+
+    OW->>CLA: Classify intent
+    CLA-->>OW: "KB"
+
+    OW->>KBW: Start KB Sub-Workflow
+    KBW->>KB: run_kb_agent(message, session_id)
+
+    KB->>R: Load LangGraph checkpoint (session_id)
+    KB->>KB: Invoke KB Graph (RAG)
+    KB->>R: Save updated checkpoint
+    KB-->>KBW: "Here's how to reset your password..."
+
+    KBW-->>OW: Result
+    OW-->>TC: Final response
+    TC-->>API: Workflow result
+    API-->>U: JSON response
+
+
+%% ============================================================
+%% FLOW 2: Action + HITL
+%% ============================================================
+sequenceDiagram
+    autonumber
+    participant U as 👤 User
+    participant API as FastAPI :8000
+    participant TC as Temporal Client
+    participant OW as Orchestrator WF
+    participant CLA as Classification
+    participant AW as Action Sub-WF
+    participant ACT as Action Activity<br/>(LangGraph)
+    participant R as Redis
+
+    rect rgb(230, 81, 0)
+    Note over U,R: Flow 2 — Action Query with Human-in-the-Loop
+    end
+
+    U->>API: POST /chat {message: "Submit leave request"}
+    API->>TC: Start OrchestrationWorkflow
+    TC->>OW: Execute workflow
+
+    OW->>CLA: Classify intent
+    CLA-->>OW: "ACTION"
+
+    OW->>AW: Start Action Sub-Workflow
+    AW->>ACT: run_action_agent(message, session_id)
+
+    ACT->>ACT: LangGraph Action Graph → detects sensitive action
+    ACT-->>AW: needs_approval = true
+
+    AW->>AW: Set task status = "input-required"
+    AW->>AW: workflow.wait_condition(approval_received)
+
+    Note over AW: ⏸️ Workflow PAUSED — waiting for approval
+
+    U->>API: POST /approve/{workflow_id}
+    API->>AW: Send Temporal Signal (approved=true)
+
+    AW->>ACT: Resume action_agent(approved=true)
+    ACT->>ACT: Execute tool (submit_leave)
+    ACT->>R: Save checkpoint
+    ACT-->>AW: "Leave request submitted successfully"
+
+    AW-->>OW: Result
+    OW-->>TC: Final response
+    TC-->>API: Workflow result
+    API-->>U: JSON response
+
+
+%% ============================================================
+%% FLOW 3: A2A Inbound (External Agent Calling Us)
+%% ============================================================
+sequenceDiagram
+    autonumber
+    participant EA as 🌍 External Agent
+    participant A2A as FastA2A Server :8000
+    participant TC as Temporal Client
+    participant OW as Orchestrator WF
+    participant CLA as Classification
+    participant KBW as KB Sub-WF
+    participant KB as KB Activity
+    participant R as Redis
+
+    rect rgb(183, 28, 28)
+    Note over EA,R: Flow 3 — Inbound A2A Request (external agent calls us)
+    end
+
+    EA->>A2A: POST /a2a<br/>{"method": "tasks/send", "params": {...}}
+    A2A->>A2A: FastA2A TaskManager creates Task
+    A2A->>R: Save task (status: submitted)
+    A2A->>TC: TemporalA2AWorker.run_task()
+
+    TC->>OW: Start OrchestrationWorkflow
+    OW->>CLA: Classify intent
+    CLA-->>OW: "KB"
+    OW->>KBW: KB Sub-Workflow
+    KBW->>KB: run_kb_agent()
+    KB-->>KBW: Result
+
+    KBW-->>OW: Result
+    OW-->>TC: Final response
+    TC-->>A2A: Workflow result
+    A2A->>R: Update task (status: completed, artifacts: [...])
+    A2A-->>EA: JSON-RPC Response<br/>{task: {status: "completed", artifacts: [...]}}
+
+
+%% ============================================================
+%% FLOW 4: Delegation to External Agent
+%% ============================================================
+sequenceDiagram
+    autonumber
+    participant U as 👤 User
+    participant API as FastAPI :8000
+    participant TC as Temporal Client
+    participant OW as Orchestrator WF
+    participant CLA as Classification
+    participant DW as Delegate Sub-WF
+    participant CLI as A2A Client
+    participant REG as Agent Registry
+    participant EA as 🌍 External Agent
+
+    rect rgb(55, 71, 79)
+    Note over U,EA: Flow 4 — Delegation to External A2A Agent
+    end
+
+    U->>API: POST /chat {message: "Check my flight status"}
+    API->>TC: Start OrchestrationWorkflow
+    TC->>OW: Execute workflow
+
+    OW->>CLA: Classify intent
+    CLA->>REG: Match skills against external agents
+    REG-->>CLA: Matched: "travel-agent" at https://travel.example.com
+    CLA-->>OW: "DELEGATE" + agent_url
+
+    OW->>DW: Start Delegate Sub-Workflow
+
+    DW->>CLI: send_a2a_task(agent_url, message)
+    CLI->>EA: POST https://travel.example.com/a2a<br/>{"method": "tasks/send", ...}
+    EA-->>CLI: {task: {id: "t1", status: "working"}}
+
+    loop Poll until completed
+        DW->>CLI: get_a2a_task(agent_url, task_id)
+        CLI->>EA: POST /a2a {"method": "tasks/get", ...}
+        EA-->>CLI: {task: {status: "completed", artifacts: [...]}}
+    end
+
+    CLI-->>DW: Task result
+    DW-->>OW: External agent response
+    OW-->>TC: Final response
+    TC-->>API: Workflow result
+    API-->>U: "Your flight AA123 is on time, gate B7"

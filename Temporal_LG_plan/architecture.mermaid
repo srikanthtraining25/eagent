@@ -1,0 +1,37 @@
+graph TD
+    User[User] -->|HTTP Request| API[FastAPI Layer]
+    API -->|Start Workflow| TemporalClient[Temporal Client]
+    TemporalClient -->|Trigger| Orchestrator[Orchestration Workflow]
+    
+    subgraph Temporal Cluster
+        Orchestrator -->|Activity: Classify| Classifier[Classification Activity]
+        
+        Orchestrator -->|Decision: KB| KBFlow[KB Sub-Workflow]
+        Orchestrator -->|Decision: Action| ActionFlow[Action Sub-Workflow]
+        
+        KBFlow -->|Activity: RAG| KBAgent[LangGraph KB Agent]
+        ActionFlow -->|Activity: Plan/Execute| ActionAgent[LangGraph Action Agent]
+        
+        ActionFlow -->|Signal: Human Approval| HumanLoop[Human Approval]
+        
+        ActionAgent -->|External Call| ExternalAPI[External APIs]
+    end
+    
+    Orchestrator -->|Consolidate| Response[Final Response]
+    Response -->|Return| API
+    
+    subgraph Persistence
+        PG[(PostgreSQL\nTemporal State)]
+        Redis[(Redis\nLangGraph Checkpoint)]
+    end
+    
+    subgraph Observability
+        Arize[Arize AI / Phoenix]
+    end
+    
+    Orchestrator -.->|Workflow History| PG
+    KBAgent -.->|Thread State| Redis
+    ActionAgent -.->|Thread State| Redis
+    
+    KBAgent -.->|Traces| Arize
+    ActionAgent -.->|Traces| Arize

@@ -1,0 +1,43 @@
+# Enterprise Agent with Temporal + LangGraph + FastA2A
+
+- [x] Explore existing codebase and understand current architecture
+- [x] Create detailed implementation plan and architecture diagram
+    - [x] Initial Plan (Temporal + LangGraph)
+    - [x] Refine plan with State/Observability details
+    - [x] Generate Architecture Diagram Image
+    - [x] Integrate A2A Framework into plan
+    - [x] Update plan to use FastA2A library
+    - [x] Consolidate to single unified agent (no exposed internal agents)
+- [x] Implement Unified Server (FastAPI + FastA2A)
+    - [x] FastAPI app with /chat and /approve routes
+    - [x] A2A JSON-RPC endpoint and Agent Card
+    - [x] TemporalA2AWorker (A2A → Temporal bridge)
+    - [x] RedisStorage (task + context persistence)
+    - [x] A2A Client (outbound JSON-RPC calls)
+    - [x] Agent Registry (external agent discovery)
+- [x] Implement Temporal Orchestration
+    - [x] Temporal Client and Worker setup
+    - [x] Orchestrator Workflow (classify + route)
+    - [x] KB Sub-Workflow
+    - [x] Action Sub-Workflow (+ HITL signal handling)
+    - [x] Delegate Sub-Workflow (external A2A)
+- [x] Implement LangGraph Agents (Internal Activities)
+    - [x] Shared AgentState definition
+    - [x] KB Graph definition (RAG: retrieve → generate)
+    - [x] Action Graph definition (ReAct: plan → execute → summarize)
+    - [x] Agent Activities (run_kb_agent, run_action_agent)
+    - [x] Classification Activity (KB/ACTION/DELEGATE)
+- [x] Implement A2A Client for Outbound Delegation
+    - [x] A2A Client (httpx JSON-RPC caller)
+    - [x] Agent Registry (external agent discovery)
+    - [x] A2A outbound activities (send/get/discover)
+- [x] Core Configuration
+    - [x] .env.example with all configurable properties
+    - [x] Pydantic Settings (config.py)
+    - [x] Structured logging (logging.py)
+    - [x] Temporal client setup (temporal.py)
+    - [x] Redis checkpointer (checkpoint.py)
+- [x] Docker Setup
+    - [x] Dockerfile
+    - [x] docker-compose.yml (4 services)
+- [ ] Verify System with End-to-End tests
